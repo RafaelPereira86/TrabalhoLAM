@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Trabalho</string>
+    <string name="nome_upt">Universidade Portucalense</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="search">Procurar...</string>
+</resources>

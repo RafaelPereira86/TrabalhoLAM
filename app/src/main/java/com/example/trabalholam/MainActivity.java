@@ -2,11 +2,13 @@ package com.example.trabalholam;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,7 +32,18 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextpass);
         textView = findViewById(R.id.textView2);
         btn = findViewById(R.id.btnlogin);
-        btn.setOnClickListener(this::login);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                    Toast.makeText(MainActivity.this,"Email e Password em falta!",Toast.LENGTH_LONG).show();
+                }else{
+                    
+                }
+            }
+        });
     }
 
     public void login(View view) {
@@ -42,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         textView.setText("Response is: " + response);
+
+                        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                        startActivity(intent);
+
                     }
                 }, new Response.ErrorListener() {
             @Override

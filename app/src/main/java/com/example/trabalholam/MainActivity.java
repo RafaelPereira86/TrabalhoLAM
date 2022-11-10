@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://alunos.upt.pt/~abilioc/dam.php?func=auth&login=";
+        String url = "https://alunos.upt.pt/~abilioc/dam.php?func=auth&login=" + email.getText().toString() +"&password=" + password.getText().toString();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

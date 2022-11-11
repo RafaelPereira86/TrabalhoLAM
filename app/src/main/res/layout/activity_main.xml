@@ -109,7 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:onClick="login" />
+            android:onClick="login"
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
 

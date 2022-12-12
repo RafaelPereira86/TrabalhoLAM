@@ -11,4 +11,5 @@
     <string name="fila1Nome">Diogo</string>
     <string name="fila1UC">20</string>
     <string name="fila1Nota">LAM</string>
+    <string name="menu_principal">Menu Principal</string>
 </resources>

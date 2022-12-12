@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                             if(check.equalsIgnoreCase("")){
                                 addToDataBase(Interger.parseInt(numero),password,token);
                             }
-                            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                            Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                             intent.putExtra(tokenA,check);
                             startActivity(intent);
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             String check = db.authCheck(numero,password);
             if(check != null){
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                 intent.putExtra(tokenA,check);
                 startActivity(intent);
             }

@@ -21,7 +21,7 @@ public class Db_handler extends SQLiteOpenHelper {
     public static final String DB_UC_TABLE = "UC";
     public static final String DB_AL_UC_NOTAS_TABLE = "NOTA";
     public static final String DB_AL_UC_HORARIO_TABLE = "HR";
-
+    public static final String DB_AL_UC_INS = "UC_INS";
 
     //TABELA ALUNO
     public static final String ALNUM = "ALNUM";
@@ -47,6 +47,11 @@ public class Db_handler extends SQLiteOpenHelper {
     public static final String UC_NOTA_COD = "COD_UC";
     public static final String NOTA = "NOTA";
 
+    //TABELA INCRIÇÃO
+    public static final String UC_INSCRICAO_ID = "UC_INSs_ID";
+    public static final String AL_UCINCRICAO_NUM = "NUM_ALUNO";
+    public static final String UC_UCINSCRICAO_COD = "COD_UC";
+
 
     public Db_handler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,94 +72,114 @@ public class Db_handler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DB_AL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DB_UC_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DB_AL_UC_HORARIO_TABLE);
         db.execSQL(String.format("DROP TABLE IF EXISTS %s", DB_AL_UC_NOTAS_TABLE));
         onCreate(db);
     }
 
-    public boolean insertNotas(Notas Value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("uc", Integer.parseInt(Value.getUc()));
-        cv.put("nota", Integer.parseInt(Value.getNota()));
-        return db.insert("Notas", null, cv) > 0;
-    }
-
-    public boolean inserthorario(Horario Value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("diaSemana", Integer.parseInt(Value.getDiaSemana()));
-        cv.put("horaInicio", Integer.parseInt(Value.getHoraInicio()));
-        cv.put("horaFim", Integer.parseInt(Value.getHoraFim()));
-        cv.put("codigoUC", Integer.parseInt(Value.getCodigoUC()));
-        cv.put("tipoAula", Value.getTipoAula());
-        return db.insert("horario", null, cv) > 0;
-    }
-
-    public boolean insertdisciplina(Disciplina Value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("uc", Integer.parseInt(Value.getUc()));
-        return db.insert("disciplina", null, cv) > 0;
-    }
-
-    String listarNotas() {
-        String query;
-        Cursor cursor;
-        String resultado;
-
+    public ArrayList<String> getInscr(String token){
+        ArrayList<String>insc = new ArrayList<>();
+        ArrayList<Integer>ucCod = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        query = "select * FROM " + DATABASE_NAME;
-        resultado = "";
+        int al = checkToken(token);
+        String query = String.format("SELECT %s FROM %s WHERE %s = %s", UC_UCINSCRICAO_COD, DB_AL_UC_INS,AL_UCINCRICAO_NUM, al);
+        Cursor cursor = db.rawQuery(query, null);
 
-        cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                resultado = String.format("%s %20s %20s\n", resultado, cursor.getString(1), cursor.getString(2));
-            } while (cursor.moveToNext());
+        if(cursor.moveToFirst()){
+            do{
+                ucCod.add(cursor.getInt(0));
+            }while (cursor.moveToNext());
         }
         cursor.close();
-        return resultado;
-    }
-
-
-    String listarUcs(){
-        String query;
-        Cursor cursor;
-        String resultado;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        query = "select * from " + DATABASE_NAME;
-        resultado = "";
-
-        cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                resultado = String.format("%s %20s %20s\n", resultado, cursor.getString(1), cursor.getString(2));
-            } while (cursor.moveToNext());
+        for (int i = 0; i < ucCod.size(); i++) {
+            if(insc.contains(getUc(ucCod.get(i)).getUc())){
+            }else{
+                insc.add(getUc(ucCod.get(i)).getUc());
+            }
         }
-        cursor.close();
-        return resultado;
+        return insc;
     }
 
-    String listarHorario(){
-        String query;
-        Cursor cursor;
-        String resultado;
-        SQLiteDatabase db = this.getReadableDatabase();
-        query = "select * from " + DATABASE_NAME;
-        resultado = "";
 
-        cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                resultado = String.format("%s %20s %20s\n", resultado, cursor.getString(1), cursor.getString(2));
-            } while (cursor.moveToNext());
+    public String checkUser(String num, String pass) {
+        SQLiteDatabase db = getWritableDatabase();
+        String queryCheck = "SELECT * FROM " + DB_AL_TABLE;
+        Cursor cursor = null;
+        if(db != null){
+            cursor = db.rawQuery(queryCheck,null);
         }
-        cursor.close();
-        return resultado;
+        if(cursor.getCount() != 0){
+            while(cursor.moveToNext()){
+                if(num.equalsIgnoreCase(String.valueOf(cursor.getInt(0))) && pass.equalsIgnoreCase(cursor.getString(1))){
+                    return cursor.getString(2);
+                }
+            }
+        }
+        return "";
     }
+
+    public void addAluno(Aluno a)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryAdd = String.format("INSERT INTO %s(%s,%s,%s) VALUES ('%s','%s','%s'); ", DB_AL_TABLE, ALNUM, AL_NOTA_NUM, ALPASSWORD, ALTOKEN, a.getNumber(), a.getPassword(), a.getToken());
+        db.execSQL(queryAdd);
+    }
+
+    public void addNota(Nota n)
+    {
+    SQLiteDatabase db = this.getWritableDatabase();
+    String queryAdd = String.format("INSERT INFO %s(%s,%s,%s) VALUES ('%s','%s','%s');", DB_AL_UC_NOTAS_TABLE, AL_NOTA_NUM, UC_NOTA_COD, NOTA, n.getnAluno(), n.getCodUc(), n.getNota());
+    db.execSQL(queryAdd);
+    }
+
+    public void addInscr(InscricaoAl inscricaoAl)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryAdd = String.format("INSERT INTO %s(%s,%s) VALUES ('%s','%s'); ", DB_AL_UC_INS,AL_UCINCRICAO_NUM,UC_UCINSCRICAO_COD,inscricaoAl.getAlunoID(),inscricaoAl.getUcID());
+        db.execSQL(queryAdd);
+    }
+
+    public void addUc(Disciplina d){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryAdd = String.format("INSERT INTO %s(%s,%s) VALUES ('%s','%s'); ", DB_UC_TABLE,UCCOD,UCNOME,d.getCodUc(),d.getUc());
+        db.execSQL(queryAdd);
+    }
+
+    public void addHorario(Horario h){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryAdd = String.format("INSERT INTO %s(%s,%s,%s;%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s'); ", DB_AL_UC_HORARIO_TABLE,AL_HORARIO_NUM,UC_HORARIO_COD,HORARIODIA,HORIRIOINI,HORARIOFIN,HORARIOTIPO,h.getNumAluno(),h.getCodigoUC(),h.getDiaSemana(),h.getHoraInicio(),h.getHoraFim(),h.getTipoAula());
+        db.execSQL(queryAdd);
+    }
+
+    public Disciplina getUc(int CodUc){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = String.format("SELECT * FROM %s WHERE %s = %s", DB_UC_TABLE,UCCOD,CodUc);
+        Cursor cursor = db.rawQuery(query,null);
+        if(cursor.moveToFirst()){
+            Disciplina d = new Disciplina(cursor.getInt(0), cursor.getString(1).replace("\n",""));
+            return d;
+        }
+        return null;
+    }
+    public ArrayList<Nota> getNotas(String token){
+        ArrayList<Nota> n = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numAl = checkToken(token);
+        String query = String.format("SELECT * FROM %s WHERE %s = %s", DB_AL_UC_NOTAS_TABLE, numAl, AL_NOTA_NUM);
+        Cursor c = db.rawQuery(query,null);
+        if(c.moveToFirst()){
+            do{
+                Nota nota = new Nota();
+                nota.setnAluno(c.getInt(1));
+                nota.setCodUc(c.getInt(2));
+                nota.setNota(c.getInt(3));
+                n.add(nota);
+            }while (c.moveToNext());
+        }
+        return n;
+    }
+
+
 }
 

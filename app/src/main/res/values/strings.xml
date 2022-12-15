@@ -12,4 +12,10 @@
     <string name="fila1UC">20</string>
     <string name="fila1Nota">LAM</string>
     <string name="menu_principal">Menu Principal</string>
+    <string name="nota">Notas</string>
+    <string name="horario">Horário</string>
+    <string name="disciplina">Disciplinas</string>
+    <string name="siupt">SIUPT</string>
+    <string name="web">WEBMAIL</string>
+    <string name="sair">Sair</string>
 </resources>

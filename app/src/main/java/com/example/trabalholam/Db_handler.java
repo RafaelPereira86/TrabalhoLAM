@@ -122,7 +122,7 @@ public class Db_handler extends SQLiteOpenHelper {
     public void addAluno(Aluno a)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        String queryAdd = String.format("INSERT INTO %s(%s,%s,%s) VALUES ('%s','%s','%s'); ", DB_AL_TABLE, ALNUM, AL_NOTA_NUM, ALPASSWORD, ALTOKEN, a.getNumber(), a.getPassword(), a.getToken());
+        String queryAdd = String.format("INSERT INTO %s(%s,%s,%s) VALUES ('%s','%s','%s'); ", DB_AL_TABLE, ALNUM, ALPASSWORD, ALTOKEN, a.getNumber(), a.getPassword(), a.getToken());
         db.execSQL(queryAdd);
     }
 

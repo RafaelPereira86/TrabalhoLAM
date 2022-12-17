@@ -11,6 +11,8 @@ import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,8 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-    EditText number;
-    EditText password;
+    TextView number;
+    TextView password;
     Button btn;
     TextView textView;
 
@@ -46,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
 
+        db = new Db_handler(this);
         number = findViewById(R.id.editTextemail);
         password = findViewById(R.id.editTextpass);
         textView = findViewById(R.id.textView2);
@@ -60,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         num = number.getText().toString();
         pass = password.getText().toString();
         if (isConnected()) {
-            RequestQueue queue = Volley.newRequestQueue(this);
             String url = "https://alunos.upt.pt/~abilioc/dam.php?func=auth&login=" + num + "&password=" + pass;
             queue = Volley.newRequestQueue(MainActivity.this);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
                         @Override
                         public void onResponse(String response) {
                             // Display the first 500 characters of the response string.
@@ -95,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(MainActivity.this,"Sem ligação a internet",Toast.LENGTH_SHORT).show();
 
+            String check = db.checkUser(num,pass);
+            if(!check.equals("")){
+                Intent i = new Intent(this,MenuActivity.class);
+                i.putExtra(tokenA,check);
+                startActivity(i);
+            }
         }
     }
 

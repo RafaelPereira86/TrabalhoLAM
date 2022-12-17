@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.trabalholam.Adapters.AdapterDisciplinas;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 
 
 
-public class listarDisciplinas extends AppCompatActivity {
+public class ListarDisciplinas extends AppCompatActivity {
 
     Db_handler dbHandler;
     RequestQueue queue;
@@ -50,7 +51,7 @@ public class listarDisciplinas extends AppCompatActivity {
         listarDisciplinas = new ArrayList<>();
 
         i = getIntent();
-        token = i.getStringExtra(MenuActivity.token);
+        token = i.getStringExtra(MenuActivity.tokenM);
         dbHandler = new Db_handler(this);
 
         if (isConnected()) {
@@ -76,7 +77,7 @@ public class listarDisciplinas extends AppCompatActivity {
     }
 
     public void getDisciplinas() {
-        queue = Volley.newRequestQueue(listarDisciplinas.this);
+        queue = Volley.newRequestQueue(ListarDisciplinas.this);
         String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=horario&token=" + token;
         JsonObjectRequest jObeject = new JsonObjectRequest(Request.Method.GET, myUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -85,10 +86,10 @@ public class listarDisciplinas extends AppCompatActivity {
                     JSONArray disciplinas = response.getJSONArray("horario");
                     for (int i = 0; i < disciplinas.length(); i++) {
                         JSONObject ucObject = disciplinas.getJSONObject(i);
-                        getUc(ucObject.getInt("codigoUC"), new ICallBack() {
+                        getUc(ucObject.getInt("codigoUC"), new ICallback() {
                             @Override
                             public void onSuccess(String uc) {
-                                if (listarDisciplinas.contains(uc)) {
+                                if(listarDisciplinas.contains(uc)) {
                                 } else {
                                     listarDisciplinas.add(uc);
                                 }
@@ -104,7 +105,7 @@ public class listarDisciplinas extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(listarDisciplinas.this, "Failed to get Response", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListarDisciplinas.this, "Failed to get Response", Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(jObeject);
@@ -114,20 +115,20 @@ public class listarDisciplinas extends AppCompatActivity {
         listarDisciplinas = (dbHandler.getInscr(token));
     }
 
-    public void getUc(int uc, final ICallBack callback) {
+    public void getUc(int uc, final ICallback callback) {
         String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=uc&codigo=" + uc;
         Log.d("ver", "getUc: " + myUrl);
         //Background work here
         StringRequest sr = new StringRequest(Request.Method.GET, myUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(listarDisciplinas.this, "done", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListarDisciplinas.this, "done", Toast.LENGTH_SHORT).show();
                 callback.onSuccess(response.replace("\n", ""));
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(listarDisciplinas.this, "Erro" + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListarDisciplinas.this, "Erro" + error, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -137,7 +138,10 @@ public class listarDisciplinas extends AppCompatActivity {
     public boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
-            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            NetworkCapabilities capabilities = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            }
             if (capabilities != null) {
                 if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
                     Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR");

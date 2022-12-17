@@ -73,7 +73,7 @@
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
-            app:cardBackgroundColor="@color/AzulUPT">>
+            app:cardBackgroundColor="@color/AzulUPT">
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-package com.example.trabalholam;
+package com.example.trabalholam.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,44 +7,41 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.trabalholam.R;
+import com.example.trabalholam.View_HolderDisciplinas;
+
 import java.util.ArrayList;
 
 
 public class AdapterDisciplinas extends RecyclerView.Adapter<View_HolderDisciplinas>{
-    ArrayList<String> disciplinas;
-    View_HolderDisciplinas myViewHolderDisciplina;
 
-    public AdapterDisciplinas(ArrayList<String> ListaDisciplinas) {
-        disciplinas = ListaDisciplinas;
+    ArrayList<String> disciplinas;
+    View_HolderDisciplinas myVDis;
+
+    public AdapterDisciplinas(ArrayList<String> listarDisciplinas) {
+        disciplinas = listarDisciplinas;
     }
 
     @NonNull
     @Override
     public View_HolderDisciplinas onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
+        View v;
 
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_disciplinas, parent, false);
+        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_disciplinas,parent,false);
 
-        myViewHolderDisciplina = new View_HolderDisciplinas(view);
-        return myViewHolderDisciplina;
+        myVDis = new View_HolderDisciplinas(v);
+        return myVDis;
     }
 
     @Override
     public void onBindViewHolder(@NonNull View_HolderDisciplinas holder, int position) {
-        myViewHolderDisciplina.disciplinaTextView.setText(disciplinas.get(position));
-        myViewHolderDisciplina.disciplinaTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        myVDis.discTextv.setText(disciplinas.get(position));
     }
 
     @Override
     public int getItemCount() {
         return disciplinas.size();
     }
-
     @Override
     public int getItemViewType(int position) {
         return position;

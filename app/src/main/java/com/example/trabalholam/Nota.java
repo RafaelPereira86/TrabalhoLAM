@@ -6,10 +6,17 @@ public class Nota {
     private String uc;
     private int nota;
 
-    public Nota(String uc, int nota, int nAluno) {
+    public Nota(int codUc, int nAluno, String uc, int nota) {
+        this.codUc = codUc;
+        this.nAluno = nAluno;
         this.uc = uc;
         this.nota = nota;
-        this.nAluno = nAluno;
+    }
+
+    public Nota() {
+        this.codUc = 0;
+        this.nAluno = 0;
+        this.nota = 0;
     }
 
     public String getUc() {
@@ -43,4 +50,7 @@ public class Nota {
     public void setCodUc(int codUc) {
         this.codUc = codUc;
     }
+
+
+
 }

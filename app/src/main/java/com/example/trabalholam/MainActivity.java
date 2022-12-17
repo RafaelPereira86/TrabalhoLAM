@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         pass = password.getText().toString();
         if (isConnected()) {
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "https://alunos.upt.pt/~abilioc/dam.php?func=auth&login=" + num + "password=" + pass;
+            String url = "https://alunos.upt.pt/~abilioc/dam.php?func=auth&login=" + num + "&password=" + pass;
             queue = Volley.newRequestQueue(MainActivity.this);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
@@ -123,7 +123,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addToDataBase(int number, String password, String token){
-        addAluno();
+        addAluno(new Aluno(number,password,token));
+        addUcs();
+        //addHorario();
+        adicNotas();
+        addInscricao();
     }
 
     private void addAluno(Aluno a) {
@@ -198,8 +202,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void adicNotas(){
+        queue = Volley.newRequestQueue(MainActivity.this);
+        String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=classificacao&token=" + token;
 
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, myUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("classificacao");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        getUc(object.getInt("uc"), new ICallback() {
+                            @Override
+                            public void onSuccess(String uc) {
+                                try {
+                                    db.addUc(new Disciplina(object.getInt("uc"), uc));
+                                    Nota n = new Nota();
+                                    n.setCodUc(object.getInt("uc"));
+                                    n.setNota(object.getInt("nota"));
+                                    n.setnAluno(db.checkToken(token));
+                                    db.addNota(n);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(objectRequest);
     }
+
 
     private void getUc(int uc, ICallback callback) {
         String myUrl = "https://alunos.upt.pt/abilioc/dam.php?func=uc&codigo=" + uc;

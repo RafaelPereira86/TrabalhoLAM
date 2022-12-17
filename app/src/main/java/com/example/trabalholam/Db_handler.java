@@ -180,6 +180,44 @@ public class Db_handler extends SQLiteOpenHelper {
         return n;
     }
 
+    public ArrayList<Horario> getHorAl(String tokenAl){
+        ArrayList<Horario> hs = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        int alNum = checkToken(tokenAl);
+        String query = String.format("SELECT * FROM %s WHERE %s = %s ", DB_AL_UC_HORARIO_TABLE, AL_HORARIO_NUM,alNum);
+        Cursor c = db.rawQuery(query,null);
+        if(c.moveToFirst()){
+            do{
+                Horario h = new Horario();
+                h.setNumAluno((c.getInt(1)));
+                h.setCodigoUC(c.getInt(2));
+                h.setDiaSemana(c.getInt(3));
+                h.setHoraInicio(c.getInt(4));
+                h.setHoraFim(c.getInt(5));
+                h.setTipoAula(c.getString(6));
+                hs.add(h);
+            }while(c.moveToNext());
+        }
+            return hs;
+        }
 
+        public int checkToken(String token) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String querycheck = String.format("SELECT * FROM %s WHERE %s = '%s'",DB_AL_TABLE,ALTOKEN, token);
+        Cursor c = db.rawQuery(querycheck,null);
+        if(c.moveToFirst()){
+            int alNum = c.getInt(0);
+            return alNum;
+    }else{
+            return -1;
+        }
+    }
+
+    public boolean checkPorUmaUc(int codUc){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String querycheck = String.format("SELECT * FROM %s WHERE %s = %s", DB_UC_TABLE,UCCOD,codUc);
+        Cursor c = db.rawQuery(querycheck, null);
+        return  c.getCount() == 0;
+    }
 }
 

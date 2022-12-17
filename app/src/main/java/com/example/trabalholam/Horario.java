@@ -17,6 +17,15 @@ public class Horario {
         this.horaFim = horaFim;
         this.tipoAula = tipoAula;
     }
+    public Horario(){
+        this.numAluno = 0;
+        this.codigoUC = 0;
+        this.diaSemana = 0;
+        this.horaInicio = 0;
+        this.horaFim = 0;
+        this.tipoAula = "";
+
+    }
 
     public int getNumAluno() {
         return numAluno;

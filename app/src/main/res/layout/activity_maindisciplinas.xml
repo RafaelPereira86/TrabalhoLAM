@@ -17,11 +17,19 @@
         android:layout_marginTop="10sp"
         app:srcCompat="@drawable/logo_portucalense" />
 
-    <TextView
-        android:id="@+id/horario"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDisciplinas"
         android:layout_width="match_parent"
-        android:layout_height="390dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingBottom="105dp">
 
+    </androidx.recyclerview.widget.RecyclerView>
+    android:id="@+id/finishBtnListaUcs"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/btn_amarelo"
+    android:elevation="3dp">
     <Button
         android:id="@+id/sair"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -32,5 +40,15 @@
         android:textColor="@color/white"
         app:icon="@android:drawable/ic_menu_set_as"
         app:iconTint="@color/black" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/finishBtnListarDisciplinas"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/background_menu"
+        android:elevation="3dp">
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>

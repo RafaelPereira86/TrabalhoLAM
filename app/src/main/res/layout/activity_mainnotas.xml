@@ -26,8 +26,6 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-
-
     <Button
         android:id="@+id/sair"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -38,5 +36,14 @@
         android:textColor="@color/white"
         app:icon="@android:drawable/ic_menu_set_as"
         app:iconTint="@color/black" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/finishBtnListarNotas"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:elevation="3dp">
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>

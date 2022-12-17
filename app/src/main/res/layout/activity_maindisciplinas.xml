@@ -25,11 +25,7 @@
         android:paddingBottom="105dp">
 
     </androidx.recyclerview.widget.RecyclerView>
-    android:id="@+id/finishBtnListaUcs"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@drawable/btn_amarelo"
-    android:elevation="3dp">
+
     <Button
         android:id="@+id/sair"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -44,7 +40,6 @@
         android:id="@+id/finishBtnListarDisciplinas"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/background_menu"
         android:elevation="3dp">
 
 

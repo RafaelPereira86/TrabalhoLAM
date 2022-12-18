@@ -26,24 +26,25 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/sair"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/voltar"
-        android:textColor="@color/white"
-        app:icon="@android:drawable/ic_menu_set_as"
-        app:iconTint="@color/black" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/finishBtnListarDisciplinas"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:elevation="3dp">
 
-
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sair"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:icon="@android:drawable/ic_menu_set_as"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

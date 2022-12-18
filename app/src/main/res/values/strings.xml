@@ -5,12 +5,6 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="search">Procurar...</string>
-    <string name="col1">Nome</string>
-    <string name="col2">UC</string>
-    <string name="col3">Nota</string>
-    <string name="fila1Nome">Diogo</string>
-    <string name="fila1UC">20</string>
-    <string name="fila1Nota">LAM</string>
     <string name="menu_principal">Menu Principal</string>
     <string name="nota">Notas</string>
     <string name="horario">Horário</string>

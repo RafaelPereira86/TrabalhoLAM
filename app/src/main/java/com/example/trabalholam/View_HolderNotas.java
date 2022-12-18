@@ -12,7 +12,7 @@ public class View_HolderNotas extends RecyclerView.ViewHolder {
 
     public View_HolderNotas(@NonNull View itemView) {
         super(itemView);
-        textViewDisciplina = itemView.findViewById(R.id.textViewDisciplinas);
+        textViewDisciplina = itemView.findViewById(R.id.textViewDisc);
         textViewNota = itemView.findViewById(R.id.textViewNotas);
     }
 }

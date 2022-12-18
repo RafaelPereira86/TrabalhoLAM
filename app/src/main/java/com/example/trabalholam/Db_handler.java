@@ -12,7 +12,7 @@ public class Db_handler extends SQLiteOpenHelper {
 
     Context context;
     //DEFINICOES BASE DE DADODS
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "mydatabase";
 
 
@@ -48,7 +48,7 @@ public class Db_handler extends SQLiteOpenHelper {
     public static final String NOTA = "NOTA";
 
     //TABELA INCRIÇÃO
-    public static final String UC_INSCRICAO_ID = "UC_INSs_ID";
+    public static final String UC_INSCRICAO_ID = "UC_INS_ID";
     public static final String AL_UCINCRICAO_NUM = "NUM_ALUNO";
     public static final String UC_UCINSCRICAO_COD = "COD_UC";
 
@@ -64,15 +64,19 @@ public class Db_handler extends SQLiteOpenHelper {
         String queryTabelaUc = String.format("CREATE TABLE %s(%s INTERGER PRIMARY KEY,%s TEXT)", DB_UC_TABLE, UCCOD, UCNOME);
         String queryTabelaHorario = String.format("CREATE TABLE %s(%s INTERGER PRIMARY KEY,%s TEXT,%s TEXT,%s TEXT,%s TEXT,%s TEXT,%s TEXT)", DB_AL_UC_HORARIO_TABLE, HORARIOID, AL_HORARIO_NUM, UC_HORARIO_COD, HORARIODIA, HORIRIOINI, HORARIOFIN, HORARIOTIPO);
         String queryTabelaNota = String.format("CREATE TABLE %s(%s INTERGER PRIMARY KEY,%s TEXT,%s TEXT,%s TEXT)", DB_AL_UC_NOTAS_TABLE, NOTAID, AL_NOTA_NUM, UC_NOTA_COD, NOTA);
+        String queryUCInscritaTable = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER,%s INTEGER, FOREIGN KEY(%s) REFERENCES %s(%s), FOREIGN KEY(%s) REFERENCES %s(%s))",DB_AL_UC_INS, UC_INSCRICAO_ID, AL_UCINCRICAO_NUM, UC_UCINSCRICAO_COD, AL_UCINCRICAO_NUM, DB_AL_TABLE, ALNUM, UC_UCINSCRICAO_COD, DB_UC_TABLE, UCCOD);
         db.execSQL(queryTabelaAl);
         db.execSQL(queryTabelaUc);
         db.execSQL(queryTabelaHorario);
         db.execSQL(queryTabelaNota);
+        db.execSQL(queryUCInscritaTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DB_UC_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DB_AL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DB_AL_UC_INS);
         db.execSQL("DROP TABLE IF EXISTS " + DB_AL_UC_HORARIO_TABLE);
         db.execSQL(String.format("DROP TABLE IF EXISTS %s", DB_AL_UC_NOTAS_TABLE));
         onCreate(db);
@@ -103,7 +107,7 @@ public class Db_handler extends SQLiteOpenHelper {
 
 
     public String checkUser(String num, String pass) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         String queryCheck = "SELECT * FROM " + DB_AL_TABLE;
         Cursor cursor = null;
         if(db != null){
@@ -126,30 +130,31 @@ public class Db_handler extends SQLiteOpenHelper {
         db.execSQL(queryAdd);
     }
 
-    public void addNota(Nota n)
-    {
-    SQLiteDatabase db = this.getWritableDatabase();
-    String queryAdd = String.format("INSERT INFO %s(%s,%s,%s) VALUES ('%s','%s','%s');", DB_AL_UC_NOTAS_TABLE, AL_NOTA_NUM, UC_NOTA_COD, NOTA, n.getnAluno(), n.getCodUc(), n.getNota());
-    db.execSQL(queryAdd);
+    public void addNota(Nota n) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = String.format("INSERT INTO %s(%s,%s,%s) VALUES('%s','%s','%s');", DB_AL_UC_NOTAS_TABLE, AL_NOTA_NUM, UC_NOTA_COD, NOTA, n.getnAluno(), n.getCodUc(), n.getNota());
+        db.execSQL(query);
     }
 
-    public void addInscr(InscricaoAl inscricaoAl)
-    {
+    public void addInscr(InscricaoAl inscricaoAl) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String queryAdd = String.format("INSERT INTO %s(%s,%s) VALUES ('%s','%s'); ", DB_AL_UC_INS,AL_UCINCRICAO_NUM,UC_UCINSCRICAO_COD,inscricaoAl.getAlunoID(),inscricaoAl.getUcID());
-        db.execSQL(queryAdd);
+        String query = String.format("INSERT INTO %s(%s,%s) VALUES(%s,%s)", DB_AL_UC_INS, AL_UCINCRICAO_NUM, UC_UCINSCRICAO_COD, inscricaoAl.getAlunoID(), inscricaoAl.getUcID());
+        db.execSQL(query);
+        db.close();
     }
 
-    public void addUc(Disciplina d){
+    public void addUc(Disciplina c) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String queryAdd = String.format("INSERT INTO %s(%s,%s) VALUES ('%s','%s'); ", DB_UC_TABLE,UCCOD,UCNOME,d.getCodUc(),d.getUc());
-        db.execSQL(queryAdd);
+        if (checkPorUmaUc(c.getCodUc())) {
+            String query = String.format("INSERT INTO %s(%s,%s) VALUES('%s','%s');", DB_UC_TABLE, UCCOD, UCNOME, c.getCodUc(), c.getUc());
+            db.execSQL(query);
+        }
     }
 
-    public void addHorario(Horario h){
+    public void addHorario(Horario h) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String queryAdd = String.format("INSERT INTO %s(%s,%s,%s;%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s'); ", DB_AL_UC_HORARIO_TABLE,AL_HORARIO_NUM,UC_HORARIO_COD,HORARIODIA,HORIRIOINI,HORARIOFIN,HORARIOTIPO,h.getNumAluno(),h.getCodigoUC(),h.getDiaSemana(),h.getHoraInicio(),h.getHoraFim(),h.getTipoAula());
-        db.execSQL(queryAdd);
+        String query = String.format("INSERT INTO %s(%s,%s,%s,%s,%s,%s) VALUES('%s','%s','%s','%s','%s','%s');", DB_AL_UC_HORARIO_TABLE, AL_HORARIO_NUM, UC_HORARIO_COD, HORARIODIA, HORIRIOINI, HORARIOFIN, HORARIOTIPO, h.getNumAluno(), h.getCodigoUC(), h.getDiaSemana(), h.getHoraInicio(), h.getHoraFim(), h.getTipoAula());
+        db.execSQL(query);
     }
 
     public Disciplina getUc(int CodUc){

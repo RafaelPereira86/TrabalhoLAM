@@ -12,6 +12,7 @@ import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,21 +33,23 @@ import java.util.ArrayList;
 
 
 public class ListarNotas extends AppCompatActivity {
+
     Db_handler dbHandler;
     RequestQueue queue;
     Intent i;
     String token;
     ArrayList<NotasDisciplinas> ListaNotas;
-    ArrayList<Nota> Notas;
+    ArrayList<Nota> notasUcs;
     ArrayList<Disciplina> ListaDisciplinas;
     AdapterNotas myadapter;
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    ConstraintLayout cl;
+    Button btn;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainnotas);
+
         ListaNotas = new ArrayList<>();
         ListaDisciplinas = new ArrayList<>();
 
@@ -54,14 +57,12 @@ public class ListarNotas extends AppCompatActivity {
         token = i.getStringExtra(MenuActivity.tokenM);
         dbHandler = new Db_handler(this);
 
-        cl = findViewById(R.id.finishBtnListarNotas);
-        cl.setOnClickListener(this::onClick);
+        btn = findViewById(R.id.finishBtnListarNotas);
+        btn.setOnClickListener(this::onClick);
 
         if (isConnected()){
             getNotas();
-
-        }
-        else{
+        } else{
             getNotasBd();
 
         }
@@ -74,9 +75,9 @@ public class ListarNotas extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
     }
-    public void onClick(View view)
+    public void onClick(View myButton)
     {
-
+        finish();
     }
 
     public void getNotas(){
@@ -118,24 +119,21 @@ public class ListarNotas extends AppCompatActivity {
 
 
     public void getNotasBd(){
-        Notas = dbHandler.getNotas(token);
-        for (int i = 0; i < Notas.size(); i++){
-            int temp = Notas.get(i).getCodUc();
+        notasUcs = dbHandler.getNotas(token);
+        for (int i = 0; i < notasUcs.size(); i++){
+            int temp = notasUcs.get(i).getCodUc();
             ListaDisciplinas.add(dbHandler.getUc(temp));
         }
-        for (int i = 0; i < Notas.size(); i++){
-            ListaNotas.add(new NotasDisciplinas(ListaDisciplinas.get(i).getUc(), Notas.get(i).getNota()));
+        for (int i = 0; i < notasUcs.size(); i++){
+            ListaNotas.add(new NotasDisciplinas(ListaDisciplinas.get(i).getUc(), notasUcs.get(i).getNota()));
         }
     }
 
     public void getUc(int uc, final ICallback callback) {
         String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=uc&codigo=" + uc;
-        Log.d("coisa", "getUc: " + myUrl);
-        //Background work here
         StringRequest sr = new StringRequest(Request.Method.GET, myUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(ListarNotas.this, "done", Toast.LENGTH_SHORT).show();
                 callback.onSuccess(response);
             }
         }, new Response.ErrorListener() {
@@ -151,7 +149,10 @@ public class ListarNotas extends AppCompatActivity {
     public boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
-            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            NetworkCapabilities capabilities = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+            }
             if (capabilities != null) {
                 if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
                     Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR");

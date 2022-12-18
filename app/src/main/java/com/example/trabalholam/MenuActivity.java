@@ -1,5 +1,4 @@
 package com.example.trabalholam;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -40,30 +39,30 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void disciplinas(View view){
-        Intent i = new Intent(this,ListarDisciplinas.class);
+        i = new Intent(this,ListarDisciplinas.class);
         i.putExtra(tokenM, token);
         startActivity(i);
     }
 
     private void notas(View view){
-        Intent i = new Intent(this,ListarNotas.class);
+        i = new Intent(this,ListarNotas.class);
         i.putExtra(tokenM, token);
         startActivity(i);
     }
 
     private void timeTable(View view){
-        Intent i = new Intent(this,TimeTable.class);
+        i = new Intent(this,TimeTable.class);
         i.putExtra(tokenM, token);
         startActivity(i);
     }
 
     private void webMail(View view) {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mail.alunos.upt.pt/"));
+            i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mail.alunos.upt.pt/"));
             startActivity(i);
 
     }
     private void siupt(View view){
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://siupt.upt.pt/"));
+        i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://siupt.upt.pt/"));
         startActivity(i);
     }
     private void voltar(View view){

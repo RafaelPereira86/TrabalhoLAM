@@ -50,23 +50,8 @@ public class AdapterNotas extends RecyclerView.Adapter<View_HolderNotas>{
 
     @Override
     public void onBindViewHolder(@NonNull View_HolderNotas holder, int position) {
-        Log.d("Testar Notas", "onBindViewHolder: "+ myViewHolder.textViewDisciplina);
-        Log.d("notas1", "onBindViewHolder: " + holder.textViewDisciplina);
-        Log.d("notas2", "onBindViewHolder: "+ notas.get(position).getUC());
         myViewHolder.textViewDisciplina.setText(notas.get(position).getUC());
-        Log.d("notas3", "onBindViewHolder: "+ myViewHolder.textViewNota);
-        Log.d("notas4", "onBindViewHolder: " + holder.textViewNota);
-        Log.d("notas5", "onBindViewHolder: "+ notas.get(position).getNota());
         myViewHolder.textViewNota.setText(String.valueOf( notas.get(position).getNota()));
-
-    }
-
-
-
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
     }
 
     @Override
@@ -74,5 +59,9 @@ public class AdapterNotas extends RecyclerView.Adapter<View_HolderNotas>{
         return notas.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
 }

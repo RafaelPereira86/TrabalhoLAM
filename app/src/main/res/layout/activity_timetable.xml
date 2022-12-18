@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TimeTable"
+    android:orientation="vertical">
+
+    <com.github.tlaabs.timetableview.TimetableView
+        android:layout_marginTop="15dp"
+        android:id="@+id/myTimeTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:column_count="6"
+        app:header_highlight_image_size="36dp"
+        app:header_title="@array/my_header"
+        app:row_count="12"
+        app:header_highlight_color="@color/teal_200">
+
+    </com.github.tlaabs.timetableview.TimetableView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/finishBtnTimeTable"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_login_btn"
+        android:elevation="3dp">
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/voltar"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

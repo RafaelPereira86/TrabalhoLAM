@@ -18,4 +18,14 @@
     <string name="siupt">SIUPT</string>
     <string name="web">WEBMAIL</string>
     <string name="sair">Sair</string>
+    <string name="voltar">Voltar</string>
+
+    <string-array name="my_header">
+        <item></item>
+        <item>Segunda</item>
+        <item>Terça</item>
+        <item>Quarta</item>
+        <item>quinta</item>
+        <item>Sexta</item>
+    </string-array>
 </resources>

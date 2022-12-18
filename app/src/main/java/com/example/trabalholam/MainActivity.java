@@ -1,20 +1,19 @@
 package com.example.trabalholam;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.browse.MediaBrowser;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     Db_handler db;
     String num, pass;
 
-    ConstraintLayout c;
 
     public static final String tokenA = "token";
 
@@ -110,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isConnected() {
+    public boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager != null){
             NetworkCapabilities capabilities = null;
@@ -137,17 +135,62 @@ public class MainActivity extends AppCompatActivity {
     public void addToDataBase(int number, String password, String token){
         addAluno(new Aluno(number,password,token));
         addUcs();
-        //addHorario();
+        addHorario(number);
         adicNotas();
-        addInscricao();
+        addDisciplinas();
     }
 
-    private void addAluno(Aluno a) {
+    public void addAluno(Aluno a) {
         db.addAluno(a);
         Toast.makeText(MainActivity.this,"Aluno Adicionado",Toast.LENGTH_SHORT).show();
     }
 
-    private void addInscricao(){
+    public void  addHorario(int numAl){
+        queue = Volley.newRequestQueue(MainActivity.this);
+        String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=horario&token=" + token;
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, myUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray array = response.getJSONArray("horario");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        getUc(object.getInt("codigoUC"), new ICallback() {
+                            @Override
+                            public void onSuccess(String uc) {
+                                try {
+                                    Horario horario = new Horario();
+                                    db.addUc(new Disciplina(object.getInt("codigoUC"), uc));
+                                    horario.setCodigoUC(object.getInt("codigoUC"));
+                                    horario.setTipoAula(object.getString("tipoAula"));
+                                    horario.setNumAluno(numAl);
+                                    horario.setHoraInicio(object.getInt("horaInicio"));
+                                    horario.setHoraFim(object.getInt("horaFim"));
+                                    horario.setDiaSemana(object.getInt("diaSemana") - 2);
+                                    db.addHorario(horario);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(objectRequest);
+    }
+
+
+    public void addDisciplinas(){
         String myUrl ="https://alunos.upt.pt/~abilioc/dam.php?func=uc_inscrito&token" + token;
         queue = Volley.newRequestQueue(MainActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, myUrl, null, new Response.Listener<JSONObject>() {
@@ -173,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
-    private void addUcs(){
+    public void addUcs(){
         String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=uc_inscrito&token" + token;
         queue = Volley.newRequestQueue(MainActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, myUrl, null, new Response.Listener<JSONObject>() {
@@ -191,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     int codUc = jsonObjectUc.getInt("uc");
                                     Disciplina d = new Disciplina(codUc, uc);
+                                    db.addUc(d);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -209,11 +253,8 @@ public class MainActivity extends AppCompatActivity {
         });
         queue.add(jsonObjectRequest);
     }
-    private  void adicHorario(){
 
-    }
-
-    private void adicNotas(){
+    public void adicNotas(){
         queue = Volley.newRequestQueue(MainActivity.this);
         String myUrl = "https://alunos.upt.pt/~abilioc/dam.php?func=classificacao&token=" + token;
 
@@ -257,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getUc(int uc, ICallback callback) {
+    public void getUc(int uc, ICallback callback) {
         String myUrl = "https://alunos.upt.pt/abilioc/dam.php?func=uc&codigo=" + uc;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, myUrl, new Response.Listener<String>() {
             @Override

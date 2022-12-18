@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
-    android:background="@color/AzulUPT"
+    android:background="@drawable/background_login_btn"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="86dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10sp"
-        app:srcCompat="@drawable/logo_portucalense" />
+        app:srcCompat="@mipmap/upt_logo" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDisciplinas"
@@ -32,10 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="SAIR"
+        android:text="@string/voltar"
         android:textColor="@color/white"
         app:icon="@android:drawable/ic_menu_set_as"
         app:iconTint="@color/black" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/finishBtnListarDisciplinas"
         android:layout_width="match_parent"

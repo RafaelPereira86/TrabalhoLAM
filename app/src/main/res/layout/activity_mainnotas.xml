@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
-    android:background="@color/AzulUPT"
+    android:background="@drawable/background_login_btn"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="86dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10sp"
-        app:srcCompat="@drawable/logo_portucalense" />
+        app:srcCompat="@mipmap/upt_logo" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewNotas"
@@ -26,24 +26,15 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/sair"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="SAIR"
-        android:textColor="@color/white"
-        app:icon="@android:drawable/ic_menu_set_as"
-        app:iconTint="@color/black" />
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/finishBtnListarNotas"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:elevation="3dp">
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="207dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@color/AzulUPT"
+        android:text="@string/voltar"
+        android:textColor="@color/white" />
 
 
 </LinearLayout>

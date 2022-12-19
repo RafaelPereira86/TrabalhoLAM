@@ -73,7 +73,7 @@ public class ListarDisciplinas extends AppCompatActivity {
 
     public void onClick(View v)
     {
-
+        finish();
     }
 
     public void getDisciplinas() {

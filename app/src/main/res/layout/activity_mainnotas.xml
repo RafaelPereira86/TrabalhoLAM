@@ -25,16 +25,26 @@
         android:paddingBottom="105dp">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/finishBtnListarNotas"
-        android:layout_width="207dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@color/AzulUPT"
-        android:text="@string/voltar"
-        android:textColor="@color/white" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:elevation="3dp">
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sair"
+        app:icon="@android:drawable/ic_menu_set_as"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>
